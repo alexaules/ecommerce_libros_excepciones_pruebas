@@ -64,4 +64,4 @@ Incluye:
 
 ## 👥 Autores
 - **Alexis Aules** – Estudiante de Maestría en Ingeniería de Software  
-- **Mateo (Asistente de IA)** – Soporte técnico
+  
