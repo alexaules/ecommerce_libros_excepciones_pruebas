@@ -1,0 +1,71 @@
+@startuml
+title e-Commerce (Python) - Modelo principal
+
+package ecommerce {
+  class exceptions.ECommerceError
+  class exceptions.InventoryInsufficientError
+  class exceptions.PaymentFailedError
+  class exceptions.UserNotFoundError
+  class exceptions.InvalidOperationError
+
+  package models {
+    class product.Product {
+      - id: str
+      - name: str
+      - price: float
+      - stock: int
+      + reduce_stock(qty: int)
+      + increase_stock(qty: int)
+    }
+
+    class user.User {
+      - id: str
+      - name: str
+      - email: str
+      + masked_email(): str
+    }
+
+    class cart.CartItem {
+      - product: Product
+      - quantity: int
+      + subtotal: float
+    }
+
+    class cart.Cart {
+      - items: Dict[str, CartItem]
+      + add_product(product: Product, qty: int)
+      + remove_product(product_id: str, qty: int=None)
+      + total(): float
+      + clear(): None
+    }
+  }
+
+  package services {
+    class inventory.Inventory {
+      - _products: Dict[str, Product]
+      + register(product: Product)
+      + get(product_id: str): Product
+      + ensure_available(product_id: str, qty: int)
+    }
+
+    class payment.PaymentGateway {
+      - success: bool
+      - decline_reason: str
+      + charge(amount: float): str
+    }
+  }
+}
+
+exceptions.InventoryInsufficientError --> exceptions.ECommerceError
+exceptions.PaymentFailedError --> exceptions.ECommerceError
+exceptions.UserNotFoundError --> exceptions.ECommerceError
+exceptions.InvalidOperationError --> exceptions.ECommerceError
+
+models.cart.Cart "1" o-- "*" models.cart.CartItem
+models.cart.CartItem "*" --> "1" models.product.Product
+services.inventory.Inventory --> models.product.Product
+services.payment.PaymentGateway --> exceptions.PaymentFailedError
+models.cart.Cart --> exceptions.InventoryInsufficientError
+models.cart.Cart --> exceptions.InvalidOperationError
+
+@enduml

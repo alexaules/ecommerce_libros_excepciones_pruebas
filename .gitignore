@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+# Editors
+.vscode/
+.idea/
+# OS
+.DS_Store
+Thumbs.db

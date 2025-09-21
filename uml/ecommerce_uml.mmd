@@ -1,0 +1,56 @@
+classDiagram
+  class ECommerceError
+  class InventoryInsufficientError
+  class PaymentFailedError
+  class UserNotFoundError
+  class InvalidOperationError
+
+  ECommerceError <|-- InventoryInsufficientError
+  ECommerceError <|-- PaymentFailedError
+  ECommerceError <|-- UserNotFoundError
+  ECommerceError <|-- InvalidOperationError
+
+  class Product{
+    +str id
+    +str name
+    +float price
+    +int stock
+    +reduce_stock(qty)
+    +increase_stock(qty)
+  }
+
+  class User{
+    +str id
+    +str name
+    +str email
+    +masked_email()
+  }
+
+  class CartItem{
+    +Product product
+    +int quantity
+    +float subtotal
+  }
+
+  class Cart{
+    +add_product(product, qty)
+    +remove_product(product_id, qty)
+    +total()
+    +clear()
+  }
+
+  class Inventory{
+    +register(product)
+    +get(product_id)
+    +ensure_available(product_id, qty)
+  }
+
+  class PaymentGateway{
+    +bool success
+    +str decline_reason
+    +charge(amount) str
+  }
+
+  Cart o-- CartItem
+  CartItem --> Product
+  Inventory --> Product
